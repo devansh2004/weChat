@@ -1,3 +1,2 @@
 # weChat
-
-test branch
+## This is a real time chat system.
