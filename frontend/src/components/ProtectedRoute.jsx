@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 
 function ProtectedRoute({children}){
     const [isAuthorized, setisAuthorized ] = useState(null)
-
     useEffect(()=>{
         auth().catch(() => setisAuthorized(false))
     }, [])
@@ -45,7 +44,7 @@ function ProtectedRoute({children}){
             await refreshToken()
         }
         else{
-            setisAuthorized(false)
+            setisAuthorized(true)
         }
     }
 
