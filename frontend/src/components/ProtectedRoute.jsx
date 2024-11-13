@@ -11,7 +11,7 @@ function ProtectedRoute({ children }) {
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
     }, [])
-
+    
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
         try {
