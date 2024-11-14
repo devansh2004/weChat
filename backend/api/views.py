@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import views
-from .serializers import UserSerializer
+from .serializers import UserSerializer, MessageSerializer, MessageGroupSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.response import Response
+from .models import Message, MessageGroup
+from django.contrib.auth import authenticate
 
 # Create your views here.
 
@@ -41,9 +43,21 @@ class CreateUserView(generics.CreateAPIView):
 
 
 
-class UserManagement(views.APIView):
+class DeleteUser(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, username):
-        User.objects.get(username = username).delete()
+    def delete(self, request):
+        print("request-----> " , request)
+        User.objects.get(id = request.user.id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class CreateMessage(generics.CreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [AllowAny]
+
+
+class CreateGroup(generics.CreateAPIView):
+    queryset = MessageGroup.objects.all()
+    serializer_class = MessageGroupSerializer
+    permission_classes = [AllowAny]
