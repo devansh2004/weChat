@@ -18,22 +18,29 @@ function Form({route, method}){
           
             const res = await api.post(route, {username,password});
             if(method === "login"){
-                
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 localStorage.setItem(REFRESH_TOKEN,res.data.refresh);
                 navigate("/");
             }
             else{
                 navigate("/login");
+                
             }
         }
         catch(error){
-            alert(error);
+            console.log(error)
+            if(error.code == "ERR_BAD_REQUEST"){
+                alert("username or password incorrect")
+            }
         }
         finally{
             setLoading(false);
         }
     }
+
+    const handleRegisterClick = () => {
+        navigate("/register"); // Navigate to the register page
+    };
 
     return <form onSubmit={handleSubmit} className="form-container"> 
         <h1>{name}</h1>
@@ -42,6 +49,15 @@ function Form({route, method}){
         <button className="form-button" type="submit" >
             {name}
         </button>
+        {method === "login" && (
+                <button
+                    type="button"
+                    className="form-button secondary"
+                    onClick={handleRegisterClick}
+                >
+                    Register
+                </button>
+            )}
     </form>
 }
 
