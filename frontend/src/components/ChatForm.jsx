@@ -6,6 +6,7 @@ import { WebSocketContext } from "./WebSocketContext";
 import { useContext } from "react";
 
 
+
 function ChatForm(){
     const navigate = useNavigate();
     const ws = useContext(WebSocketContext)
@@ -24,6 +25,11 @@ function ChatForm(){
         }
     };
 
+    ws.onmessage = function(e){
+        let data = JSON.parse(e.data)
+        console.log("data ----> ", data)
+    }
+
 
     return <div> 
             Messages:
@@ -37,5 +43,7 @@ function ChatForm(){
         
 
 }
+
+
 
 export default ChatForm;
