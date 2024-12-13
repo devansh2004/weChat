@@ -16,14 +16,26 @@ function ChatForm(){
         setMessage(event.target.value); 
     }
 
-    const handleChat = () => {
-        
-        if (ws?.current && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify(message));
-        } else {
-            console.error("WebSocket is not connected or is in an invalid state:", ws);
-        }
+    const handleChat = async() => {
+
+
+        try {
+            const res = await api.post("/api/message/", { 'message': message, 'group': 'global' });
+            
+            if (res.status === 200) {
+                alert("Message sent");
+            } else {
+                alert("Unexpected response: " + res.status);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert("You are not authorized to send messages to this group");
+            } else {
+                console.error("An error occurred:", error);
+                alert("Failed to send the message due to a network or server error.");
+            }
     };
+}
 
     ws.onmessage = function(e){
         let data = JSON.parse(e.data)

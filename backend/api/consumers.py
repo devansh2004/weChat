@@ -8,13 +8,17 @@ class ChatConsumer(WebsocketConsumer):
 
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
-            self.channel_name
+            self.channel_name 
         )
 
 
         self.accept()
 
     def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_name
+        )
         pass
     def receive(self, text_data):
         # user = self.scope["user"]  

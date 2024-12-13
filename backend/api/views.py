@@ -51,10 +51,28 @@ class DeleteUser(views.APIView):
         User.objects.get(id = request.user.id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class CreateMessage(generics.CreateAPIView):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
+class CreateMessage(views.APIView):
     permission_classes = [AllowAny]
+
+    def post(self, request):
+
+        data = request.data
+       # print('feilds ---->', MessageGroup._meta.get_fields())
+        if(data['group'] not in list(MessageGroup.objects.values_list('group_name', flat=True))):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        groupId = MessageGroup.objects.get(group_name = data['group']).id
+        if(request.user in MessageGroup.objects.get(id = groupId).members.all()):
+
+
+            Message.objects.create(
+            message= data['message'],
+            author = request.user,
+            group= MessageGroup.objects.get(id = groupId)
+            )
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CreateGroup(generics.CreateAPIView):
